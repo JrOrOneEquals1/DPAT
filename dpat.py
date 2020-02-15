@@ -206,7 +206,7 @@ if not speed_it_up:
                     user_name = (line.split(":")[1]).strip()
                     users.append(user_domain + "\\" + user_name)
         except:
-            print("Doesn't look like the Group Files for are in the form output by PowerView, assuming the files are already in domain\\username list form")
+            print("Doesn't look like the Group Files are in the form output by PowerView, assuming the files are already in domain\\username list form")
             # If the users array is empty, assume the file was not in the PowerView PowerShell script output format that you get from running:
             # Get-NetGroupMember -GroupName "Enterprise Admins" -Domain "some.domain.com" -DomainController "DC01.some.domain.com" > Enterprise Admins.txt
             # You can list domain controllers for use in the above command with Get-NetForestDomain
@@ -288,7 +288,6 @@ if not speed_it_up:
         if count == 1:
             end = ''
         print("Cracking " + str(count) + " NT Hash" + end + " where only LM Hash was cracked (aka lm2ntcrack functionality)")
-
     for pair in progressbar(list):
         lm_pwd = ""
         if pair[1] is not None:
@@ -421,7 +420,6 @@ summary_table.append((c.fetchone()[0], "Unique LM Hashes Cracked Where NT Hash w
 c.execute('SELECT LENGTH(password) as plen,COUNT(password) FROM hash_infos WHERE plen is not NULL AND history_index = -1 AND plen is not 0 GROUP BY plen ORDER BY plen')
 list = c.fetchall()
 counter = 0
-listLen = len(list)
 print("Gathering password length statistics")
 for tuple in progressbar(list):
     length = str(tuple[0])
@@ -455,7 +453,6 @@ summary_table.append((None, "Top Password Use Stats", "<a href=\"" + filename + 
 # Password Reuse Statistics (based only on NT hash)
 c.execute('SELECT nt_hash, COUNT(nt_hash) as count, password FROM hash_infos WHERE nt_hash is not "31d6cfe0d16ae931b73c59d7e0c089c0" AND history_index = -1 GROUP BY nt_hash ORDER BY count DESC LIMIT 20')
 list = c.fetchall()
-length = len(list)
 counter = 0
 print("Gathering password reuse statistics")
 for tuple in progressbar(list):
